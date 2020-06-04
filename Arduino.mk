@@ -1228,13 +1228,17 @@ CXXFLAGS      += -fpermissive -fno-exceptions $(CXXFLAGS_STD)
 ASFLAGS       += -x assembler-with-cpp
 DIAGNOSTICS_COLOR_WHEN ?= always
 ifeq ($(shell expr $(CC_VERNUM) '>' 490), 1)
+ifndef NO_LTO
     ASFLAGS  += -flto
     CXXFLAGS += -fno-threadsafe-statics -flto -fno-devirtualize -fdiagnostics-color=$(DIAGNOSTICS_COLOR_WHEN)
     CFLAGS   += -flto -fno-fat-lto-objects -fdiagnostics-color=$(DIAGNOSTICS_COLOR_WHEN)
 endif
+endif
 LDFLAGS       += -$(MCU_FLAG_NAME)=$(MCU) -Wl,--gc-sections -O$(OPTIMIZATION_LEVEL)
 ifeq ($(shell expr $(CC_VERNUM) '>' 490), 1)
+ifndef NO_LTO
 		LDFLAGS += -flto -fuse-linker-plugin
+endif
 endif
 SIZEFLAGS     ?= --mcu=$(MCU) -C
 
